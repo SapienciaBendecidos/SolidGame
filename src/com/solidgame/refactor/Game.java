@@ -5,6 +5,12 @@
  */
 package com.solidgame.refactor;
 
+import com.solidgame.refactor.boards.Board;
+import com.solidgame.refactor.instructions.builders.InstructionBuilder;
+import com.solidgame.refactor.instructions.Instruction;
+import com.solidgame.refactor.exceptions.PlayerNotInDestinationException;
+import java.util.List;
+
 class Game {
     private Board board;
     private InstructionBuilder builder;
@@ -15,14 +21,17 @@ class Game {
         this.builder = builder;
     }
 
-    void init() {
+    void init() throws Exception {
         board.init();
         instructions = builder.load();
     }
 
-    void play() {
+    void play() throws Exception{
         for (Instruction instruction : instructions) {
             instruction.execute(board);
+        }
+        if (!board.hasPlayerArrivedDestination()) {
+            throw new PlayerNotInDestinationException();
         }
     }
     
